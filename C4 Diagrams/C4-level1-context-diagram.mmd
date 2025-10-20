@@ -1,0 +1,77 @@
+flowchart TB
+%% CMS c4 level 1 context diagram
+
+%% ---------- STYLES ----------
+classDef person fill:#fff0fa,stroke:#333,stroke-width:1px,color:#111;
+classDef system fill:#ffffff,stroke:#ffffff,stroke-width:1.2px,color:#111;
+classDef external fill:#ffaf01,stroke:#b26a00,stroke-width:1px,color:#111;
+classDef channel fill:#6e9fff,stroke:#7aa2ff,stroke-width:1px,color:#111;
+classDef future fill:#000000,stroke:#ffffff,stroke-width:1px,color:#fff;
+
+CMS["ABC Complaint Management System (Multi-tenant SaaS)\n\nNFRs: 99.9% availability • WCAG 2.2 AA • GDPR/UK DPA • RBAC + MFA • 10% annual growth • Multi-region ready\nPurpose: log, track & resolve complaints securely across tenants"]:::system
+
+%% ---------- ACTORS ----------
+Consumer["Consumer\nLog complaint • View status • Give feedback"]:::person
+Agent["Help Desk Agent\nLog/resolve via calls • Assign support"]:::person
+Support["Support Person\nInvestigate & update resolution"]:::person
+Manager["Help Desk Manager\nMonitor SLAs & team performance"]:::person
+SysAdmin["System Administrator (ABC)\nOnboard tenants • Manage roles/policies"]:::person
+
+%% ---------- CHANNELS ----------
+WebMobile["Channel – Web/Mobile UI (Accessible & Multi-lingual)"]:::channel
+AgentConsole["Channel – Agent Console (Web)"]:::channel
+SupportConsole["Channel – Support Portal (Web)"]:::channel
+Dashboard["Channel – Manager Dashboard (BI)"]:::channel
+AdminConsole["Channel – Admin Console (SaaS Ops)"]:::channel
+
+%% ---------- EXTERNAL ----------
+IdP["External System – Tenant IdP / SSO (OIDC | SAML)"]:::external
+Notify["External System – Email/SMS Gateway"]:::external
+IVR["External System – Telephony/IVR Platform (voice complaints)"]:::external
+BI["External System – Analytics/BI Platform (KPI & SLA reports)"]:::external
+Obs["External System – Logging & Monitoring Stack (Audit & Metrics)"]:::external
+Chatbot["Future – AI Chatbot Assistant (self-service resolution)"]:::future
+Region["Future – Multi-Region Deployment (Azure EU/US)"]:::future
+
+Consumer --> WebMobile
+WebMobile --> CMS
+
+Agent --> AgentConsole
+AgentConsole --> CMS
+%%  (Create/update complaints from calls)
+
+Support --> SupportConsole
+SupportConsole --> CMS
+%%  (Investigate & update resolution)
+
+Manager --> Dashboard
+Dashboard --> CMS
+%%  (Monitor & generate reports)
+
+SysAdmin --> AdminConsole
+AdminConsole --> CMS
+%%  (Admin, security & role mgmt)
+
+CMS --> IdP
+%%  (Authenticate / authorise users)
+CMS --> Notify
+%%  (Send notifications )
+IVR --> CMS
+%%  (Voice complaint API ticket creation)
+CMS --> BI
+%%  (Push metrics/ reports)
+CMS --> Obs
+%%  (Log events / health metrics)
+CMS --> Chatbot
+%%  (Future – conversational interface)
+CMS --> Region
+%%  (Future – geo-replicated data / failover)
+
+%% ---------- KEY ----------
+subgraph Legend["Colour Key/Legend"]
+L1["Pink = Actor"]:::person
+L2["White = System in Scope (CMS)"]:::system
+L3["Orange = External System"]:::external
+L4["Black = Future Extension"]:::future
+L5["Blue = Access Channel / Interface"]:::channel
+end

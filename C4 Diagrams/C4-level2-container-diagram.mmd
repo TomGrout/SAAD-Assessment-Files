@@ -1,0 +1,111 @@
+flowchart TB
+%% === STYLE DEFINITIONS ===
+classDef actor fill:#f8e8ef,stroke:#333,color:#111;
+classDef system fill:#ffffff,stroke:#333,color:#111;
+classDef channel fill:#a8c9ff,stroke:#274bdb,color:#111;
+classDef external fill:#ffb84d,stroke:#b26a00,color:#111;
+classDef future fill:#222222,stroke:#666,color:#fff;
+classDef infra fill:#e8e8e8,stroke:#555,color:#111;
+classDef observ fill:#d9d9d9,stroke:#555,color:#111;
+
+%% === CLIENTS / CHANNELS ===
+subgraph Clients
+  Web[Web App React]:::actor
+  Mobile[Mobile App React Native]:::actor
+  Agent[Agent Console Web]:::actor
+  Support[Support Portal Web]:::actor
+  Admin[Admin Console SaaS Ops]:::actor
+  Manager[Manager Dashboard]:::actor
+end
+
+%% === EDGE / GATEWAY ===
+AFD[Azure Front Door with WAF]:::infra
+APIM[Azure API Management]:::infra
+
+%% === CORE APP (Modular Monolith – Hexagonal) ===
+subgraph Core_on_Azure_Container_Apps["Core on Azure Container Apps"]
+  API[REST API Adapter]:::channel
+  AuthzPEP[AuthZ Middleware PEP]:::system
+  Domain[Domain Modules – Complaints, Users, Workflow, Communications, Reporting]:::system
+  Events[In-process domain events]:::system
+  NotifAdapter[Notification Adapter]:::system
+  TelephonyAdapter[Telephony Adapter]:::system
+  ReportingAdapter[Reporting Pipeline Adapter]:::system
+end
+
+%% === SUPPORTING APP CONTAINERS ===
+subgraph Workers_on_Azure_Container_Apps["Workers on Azure Container Apps"]
+  Notifier[Notification Worker]:::infra
+  ETL[Data Integration and ETL Worker]:::infra
+  PDP[Policy Decision Point OPA]:::infra
+end
+
+%% === DATA STORES ===
+subgraph Data_Plane["Data Plane"]
+  PG[Azure Database for PostgreSQL – OLTP schema per tenant]:::infra
+  Redis[Azure Cache for Redis]:::infra
+  RPT[Reporting PostgreSQL – read-only]:::infra
+  Blobs[Azure Blob Storage – attachments]:::infra
+  Bus[Azure Service Bus – topics]:::infra
+end
+
+%% === IDENTITY / SECRETS / OPS ===
+Entra[Microsoft Entra ID – OIDC]:::external
+KeyVault[Azure Key Vault]:::observ
+Monitor[Azure Monitor + App Insights + Log Analytics]:::observ
+
+%% === EXTERNAL INTEGRATIONS ===
+Twilio[Twilio – Email / SMS / Voice]:::external
+Tableau[Tableau Server or Cloud]:::external
+
+%% === FUTURE EXTENSIONS ===
+Chatbot[Future – AI Chatbot Assistant – self-service resolution]:::future
+MultiRegion[Future – Multi-Region Deployment – EU / US]:::future
+
+%% === CLIENT → EDGE ===
+Web --> AFD
+Mobile --> AFD
+Agent --> AFD
+Support --> AFD
+Admin --> AFD
+Manager --> Tableau
+
+%% === EDGE → CORE ===
+AFD --> APIM
+APIM --> API
+
+%% === IDENTITY ===
+APIM --> Entra
+API --> Entra
+
+%% === CORE INTERNALS ===
+API --> AuthzPEP --> Domain
+Domain --> Events
+Domain --> PG
+Domain --> Redis
+Domain --> Blobs
+Domain --> ReportingAdapter --> Bus
+Domain --> NotifAdapter --> Bus
+Domain --> TelephonyAdapter --> APIM
+
+%% === WORKERS & BUS ===
+Bus --> Notifier
+Bus --> ETL
+Notifier --> Twilio
+ETL --> RPT
+Tableau --> RPT
+
+%% === OBSERVABILITY & SECRETS ===
+Core_on_Azure_Container_Apps --> Monitor
+Workers_on_Azure_Container_Apps --> Monitor
+APIM --> Monitor
+PG --> Monitor
+Redis --> Monitor
+Bus --> Monitor
+API --> KeyVault
+Notifier --> KeyVault
+ETL --> KeyVault
+
+%% === FUTURE CONNECTIONS ===
+API -.-> Chatbot
+Core_on_Azure_Container_Apps -.-> MultiRegion
