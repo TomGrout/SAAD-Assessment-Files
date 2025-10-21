@@ -1,0 +1,56 @@
+flowchart LR
+  %% =========================
+  %% SCOPE: Inside CMS Core
+  %% =========================
+
+  %% --- Adapters (inbound + outbound) ---
+  subgraph Adapters["Ports & Adapters"]
+    ComplCtrl["ComplaintController"]
+    NotifAdapter["NotificationAdapter (Twilio)"]
+    ReportAdapter["ReportingAdapter (ETL/Tableau)"]
+  end
+
+  %% --- Cross-cutting concerns ---
+  subgraph CrossCutting["Cross-cutting"]
+    AuthMW["AuthMiddleware"]
+    TenantRes["TenantResolver"]
+    PolicyCli["PolicyClient"]
+    AuditLog["AuditLogger"]
+  end
+
+  %% --- Application/Domain services ---
+  subgraph DomainApp["Application + Domain"]
+    ComplSvc["ComplaintService"]
+    ComplRepo["ComplaintRepository"]
+    ComplEvtPub["ComplaintEventPublisher"]
+    UserSvc["UserService (RBAC/ABAC)"]
+    FlowEng["WorkflowEngine (incl. Assignment & SLA Timer)"]
+  end
+
+  %% --- Request path (synchronous) ---
+  ComplCtrl --> AuthMW --> TenantRes --> PolicyCli --> ComplSvc
+  ComplSvc --> ComplRepo
+  ComplSvc <--> FlowEng
+  UserSvc --> PolicyCli
+
+  %% --- Domain events (async) ---
+  ComplSvc --> ComplEvtPub
+  ComplEvtPub -.-> NotifAdapter
+  ComplEvtPub -.-> ReportAdapter
+
+  %% --- Cross-cutting taps ---
+  AuthMW --> AuditLog
+  PolicyCli --> AuditLog
+  ComplSvc --> AuditLog
+  FlowEng --> AuditLog
+
+  %% --- External systems (edges of container) ---
+  TwilioExt["Twilio (Email/SMS/Voice)"]:::external
+  TableauExt["Tableau (Reporting DB)"]:::external
+
+  %% Outbound adapters to externals (dashed)
+  NotifAdapter -.-> TwilioExt
+  ReportAdapter -.-> TableauExt
+
+  %% --- Styling for external boxes ---
+  classDef external fill:#ffefc6,stroke:#b88400,color:#111,stroke-width:1px;
