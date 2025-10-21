@@ -2,7 +2,7 @@
 Year 3 semester 1 assessed work
 
 
-Tools/ extensions:
+Tools/ extensions used:
 
 Extension: Mermaid Preview
 Identifier: vstirbu.vscode-mermaid-preview
