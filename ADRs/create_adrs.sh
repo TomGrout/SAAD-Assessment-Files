@@ -1,8 +1,4 @@
 #!/bin/bash
-# create_adrs.sh
-# Simple script to create empty ADR markdown files
-
-#!/bin/bash
 # create_more_adrs.sh
 # Creates additional ADR markdown files continuing existing numbering
 
