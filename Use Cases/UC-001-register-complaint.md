@@ -12,12 +12,19 @@ Postconditions:
 - Consumer receives confirmation via email or SMS.
 
 Main Flow:
-1. Consumer navigates to the complaint submission form.
-2. System prompts for relevant details (category, description, contact information).
+1. Consumer opens web or mobile interface and selects “New Complaint”.
+2. System prompts for relevant details (category, description, contact information, relevant files).
 3. Consumer submits complaint.
-4. System validates data and stores the complaint record.
-5. System sends confirmation notification to consumer.
+4. System validates data and stores the complaint record in tenant-specific schema.
+5. System sends confirmation notification to consumer by email or SMS.
 
 Alternative Flows:
-A1. Invalid Data – System displays validation error and requests correction.
-A2. System Error – System logs issue and displays error message to user.
+A1. Assisted Contact:
+   1. Consumer contacts help desk via phone or email.
+   2. Help Desk Agent records complaint details on behalf of consumer.
+   3. System stores complaint and provides reference number.
+   4. Agent communicates reference back to consumer.
+
+A2. Invalid or incomplete data - System requests corrections before submission.
+A3. Network or service interruption - System queues submission and notifies user of delay.
+A4. Accessibility mode enabled - Interface adjusts layout per WCAG 2.2 AA guidelines.

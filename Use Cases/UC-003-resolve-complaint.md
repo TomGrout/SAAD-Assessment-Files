@@ -9,14 +9,16 @@ Preconditions:
 
 Postconditions:
 - Complaint record updated with resolution notes and status “Resolved – Pending Confirmation”.
-- Consumer is notified of the resolution.
+- Consumer is notified of the resolution & resolution summary.
 
 Main Flow:
-1. Support person accesses assigned complaints.
+1. Support person reviews assigned complaints.
 2. Support person investigates and performs resolution steps.
-3. Support person enters resolution remarks.
+3. Support person records resolution remarks.
 4. System updates status and notifies consumer of resolution.
+5. Resolution analytics are logged.
 
 Alternative Flows:
-A1. Resolution cannot be completed – Support person escalates to Help Desk Manager.
-A2. System unavailable – Changes queued for later synchronisation.
+A1. Resolution cannot be completed - Support person escalates to Help Desk Manager (see UC-010).
+A2. System unavailable - Changes queued for later synchronisation.
+A3. Assisted Resolution - Support person collaborates with agent through internal chat or call.

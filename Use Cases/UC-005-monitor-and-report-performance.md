@@ -14,8 +14,8 @@ Main Flow:
 1. Manager logs into the management dashboard.
 2. Manager selects metrics or time period for analysis.
 3. System aggregates and visualises data.
-4. Manager reviews and exports report for further analysis.
-
+4. (Optional) Manager downloads report
+ 
 Alternative Flows:
-A1. Data source unavailable – System displays cached data.
-A2. Insufficient privileges – System denies access and logs event.
+A1. Data source unavailable - System displays cached data.
+A2. Insufficient privileges - System denies access and logs event.
