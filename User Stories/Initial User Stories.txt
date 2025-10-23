@@ -1,0 +1,18 @@
+Initial User Stories
+1. As a consumer, I should be able to register a problem online so that my problem gets resolved.
+2. As a consumer, I should be able to call helpdesk to register a problem so that my problem gets resolved
+3. As a consumer, I should be able to get a status of my reported problem online so that I can be assured about the resolution
+4. As a consumer, I should be able to call helpdesk to get a status of my reported problem online so that I can be assured about the resolution
+5. As a consumer I should be able to provide my satisfaction online on successful resolution to my problem so that my vendor can mark the problem as resolved.
+6. As a consumer I should be able to call helpdesk to provide my satisfaction on successful resolution to my problem so that my vendor can mark the problem as resolved.
+7. As a help desk agent, I should be able to receive calls from consumer so that I can log their problem
+8. As a help desk agent, I should be able to suggest consumers solution so that the problem gets resolved.
+9. As a help desk agent, I should be able to assign a support engineer to a problem if needed so that the problem gets resolved.
+10. As a help desk agent, I should be able to provide latest status to the consumer so that the consumer is updated about the status
+11. As a help desk agent, I should be able get feedback on resolution from consumer so that I can confirm that the problem is resolved
+12. As a support person, I should be able to update the resolution notes to the problem so that the consumer can be updated about the resolution status
+13. As a Help Desk Manager, I should be able to monitor resolution time of a problem so that optimisation measures can be taken.
+14. As a Help Desk Manager, I should be able to monitor performance of support persons so that optimisation measures can be taken.
+15. As a Help Desk Manager, I should be able to monitor performance of help desk agents so that optimisation measures can be taken.
+16. As a system administrator, I should be able to onboard an organisation so that the organisation can use CMS as their help desk solution.
+17. As a system administrator, I should be able to manage user and user privileges so that the users can use CMS.
