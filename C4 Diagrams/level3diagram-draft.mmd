@@ -1,0 +1,69 @@
+flowchart LR
+  %% =========================
+  %% Refactored Level 3 – Modular Monolith
+  %% =========================
+
+  subgraph CMS_Core["CMS Core Application"]
+  
+  %% --- Cross-cutting services ---
+  subgraph CrossCutting["Cross-Cutting Services"]
+    AuthMW["AuthMiddleware"]
+    TenantRes["TenantResolver"]
+    PolicyCli["PolicyClient (RBAC/ABAC)"]
+    AuditLog["AuditLogger"]
+  end
+
+  %% --- Interface Layer ---
+  subgraph InterfaceLayer["Interface Layer"]
+    ComplCtrl["ComplaintController"]
+  end
+
+  %% --- Application Services ---
+  subgraph ApplicationServices["Application Services"]
+    ComplSvc["ComplaintService"]
+    UserSvc["UserService"]
+  end
+
+  %% --- Domain Modules ---
+  subgraph DomainModules["Domain Modules"]
+    ComplRepo["ComplaintRepository"]
+    WFEng["WorkflowEngine (Assignment & SLA Timer)"]
+    EventPub["ComplaintEventPublisher"]
+  end
+
+  %% --- Integration Layer (internal integrations) ---
+  subgraph IntegrationLayer["Integration Layer"]
+    NotifAdapter["NotificationAdapter (Twilio)"]
+    ReportAdapter["ReportingAdapter (Tableau)"]
+  end
+
+  end
+  %% --- External Systems ---
+  TwilioExt["Twilio (Email/SMS/Voice)"]:::external
+  TableauExt["Tableau (Reporting DB)"]:::external
+
+  %% ======== Relationships ========
+
+  %% Request flow
+  ComplCtrl --> AuthMW --> TenantRes --> PolicyCli
+  PolicyCli --> ComplSvc
+  ComplSvc --> ComplRepo
+  ComplSvc --> WFEng
+  ComplSvc --> EventPub
+  ComplSvc --> AuditLog
+
+  %% Async events to integrations
+  EventPub -.-> NotifAdapter
+  EventPub -.-> ReportAdapter
+
+  %% Integrations to externals
+  NotifAdapter --> TwilioExt
+  ReportAdapter --> TableauExt
+
+  %% Cross-cutting applies globally
+  CrossCutting -.used by.-> ApplicationServices
+  CrossCutting -.used by.-> DomainModules
+  CrossCutting -.used by.-> IntegrationLayer
+
+  %% --- Styles ---
+  classDef external fill:#ffefc6,stroke:#b88400,stroke-width:1px,color:#111;
