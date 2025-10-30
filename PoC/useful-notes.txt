@@ -1,0 +1,22 @@
+ Api adapter:
+RESTful endpoints
+ 
+Get (sql select) – info returned based on input
+Customer id, complaint id, status,
+E.g manager may want summary of complaint types
+ 
+Post (sql insert) – adding new data e.g new complaint
+ 
+Put (sql update) – amend existing record
+ 
+Delete – should I be deleting or marking data as effectively deleted (archive flag)
+ 
+
+https://github.com/mustbebuilt/node-express-mongo-minimal-api
+https://www.moesif.com/blog/technical/api-development/Rest-API-Tutorial-A-Complete-Beginners-Guide/
+https://guides.emberjs.com/v1.11.0/models/the-rest-adapter/
+
+https://www.passportjs.org/packages/
+
+https://betterstack.com/community/guides/scaling-nodejs/zod-explained/
+
